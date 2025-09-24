@@ -56,7 +56,7 @@ public class DatabaseConfig {
         return new JdbcTemplate(dataSource);
     }
 
-
+    @Bean
     private Map<String,String> sparkPostgresProperties(){
         log.info("Setting up Spark PostgreSQL connection properties");
         Map<String, String> props = new HashMap<>();

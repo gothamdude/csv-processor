@@ -4,22 +4,25 @@ import com.gothamdude.csv.processor.model.DataProcessingConfig;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
+/**
+ * Adapter interface that abstracts Spark SQL data processing operations
+ */
 public interface DataProcessingAdapter {
 
     /**
-     * Load CSV data from file path using spark sql
+     * Load CSV data from file path using Spark SQL
      */
-    Dataset<Row> loadCsvData(String csvFilepath, DataProcessingConfig config);
+    Dataset<Row> loadCsvData(String csvFilePath, DataProcessingConfig config);
 
     /**
-     * Apply transformation to the dataset using spark sql
+     * Apply transformations to the dataset using Spark SQL
      */
-    Dataset<Row> applyTransformation(Dataset<Row> dataset, DataProcessingConfig config);
+    Dataset<Row> applyTransformations(Dataset<Row> dataset, DataProcessingConfig config);
 
     /**
-     * Save data to postgresql table using spark jdbc writer
+     * Save data to PostgreSQL table using Spark JDBC writer
      */
-    void saveToPostgresql(Dataset<Row> dataset, String tableName);
+    void saveToPostgres(Dataset<Row> dataset, String tableName);
 
     /**
      * Get record count efficiently
@@ -27,15 +30,12 @@ public interface DataProcessingAdapter {
     long getRecordCount(Dataset<Row> dataset);
 
     /**
-     * Validation data quality
+     * Validate data quality
      */
-    boolean validateDataQuality(Dataset<Row> dataset, DataProcessingConfig config);
+    boolean validateData(Dataset<Row> dataset, DataProcessingConfig config);
 
     /**
      * Get adapter type
      */
-    String adapterType();
-
-
-
+    String getAdapterType();
 }

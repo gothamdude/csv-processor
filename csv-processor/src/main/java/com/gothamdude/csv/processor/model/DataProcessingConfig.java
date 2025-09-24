@@ -5,25 +5,26 @@ import lombok.Data;
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class DataProcessingConfig {
 
     private String name;
     private String description;
-    private SourceConfig source;
-    private TargetConfig target;
-    private List<TransformationStep> transformations;
+    private Source source;
+    private Target target;
+    private List<Transformation> transformations;
     private Map<String, Object> parameters;
 
 
     @Data
-    public static class SourceConfig {
+    public static class Source {
         private String type;
         private String path;
         private Map<String, String> options;
     }
 
     @Data
-    public static class TargetConfig {
+    public static class Target {
         private String type;
         private String table;
         private String mode;
@@ -31,7 +32,7 @@ public class DataProcessingConfig {
     }
 
     @Data
-    public static class TransformationStep {
+    public static class Transformation {
         private String type;
         private String sql;
         private Map<String, Object> config;
