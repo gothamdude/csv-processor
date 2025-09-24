@@ -1,0 +1,45 @@
+name: trade-ingestion
+description: Trade transaction ingestion from CSV to PostgreSQL using Spark SQL
+
+source:
+  type: csv
+  options:
+    header: "true"
+    inferSchema: "true"
+    timestampFormat: "yyyy-MM-dd HH:mm:ss"
+    dateFormat: "yyyy-MM-dd"
+    encoding: "UTF-8"
+    multiline: "false"
+    escape: "\\"
+
+target:
+  type: jdbc
+  table: TRANSACTIONS
+  mode: append
+
+transformations:
+  - type: sql
+    sql: |
+      SELECT 
+        TRANSACTION_ID,
+        UPPER(TICKER) as TICKER,
+        QUANTITY,
+        UPPER(DIRECTION) as DIRECTION,
+        EMPLOYEE_ID,
+        CAST(TRANSACTION_DATE as DATE) as TRANSACTION_DATE,
+        CAST(TRANSACTION_TIMESTAMP as TIMESTAMP) as TRANSACTION_TIMESTAMP,
+        UPPER(TRANSACTION_STATUS) as TRANSACTION_STATUS
+      FROM ${table}
+      WHERE TRANSACTION_ID IS NOT NULL
+        AND QUANTITY > 0
+        AND DIRECTION IN ('B', 'S')
+        AND TRANSACTION_STATUS IN ('P', 'E', 'C')
+
+  - type: filter
+    config:
+      condition: "TICKER IS NOT NULL AND LENGTH(TICKER) <= 10"
+
+parameters:
+  max_quantity: 10000
+  valid_directions: ["B", "S"]
+  valid_statuses: ["P", "E", "C"]
